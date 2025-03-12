@@ -127,12 +127,6 @@ def create_circle_dependency(N, initial_circle):
             row[i] = 1
             continue
 
-        # booleans for skipping rows
-        skip_first_row = False
-        skip_first_col = False
-        skip_last_col = False
-        skip_last_row = False
-
         # if no neighbor point of border point or border point the diagonal value is 4
         waarde = 4
 
@@ -140,27 +134,15 @@ def create_circle_dependency(N, initial_circle):
 
         if initial_circle[row_index, col_index - 1] == -1:
             waarde -= 1
-            # skip_first_col = True
         if initial_circle[row_index, col_index + 1] == -1:
             waarde -= 1
-            # skip_last_col = True
         if initial_circle[row_index - 1, col_index] == -1:
             waarde -= 1
-            # skip_first_row = True
         if initial_circle[row_index + 1, col_index] == -1:
             waarde -= 1
-            # skip_last_row = True
 
         # assign values for the dependencies
         row[i] = -waarde
-        # if not skip_last_col:
-        #     row[i + 1] = 1
-        # if not skip_first_col:
-        #     row[i - 1] = 1
-        # if not skip_last_row:
-        #     row[i + N] = 1
-        # if not skip_first_row:
-        #     row[i - N] = 1
 
         row[i + 1] = 1
         row[i - 1] = 1
