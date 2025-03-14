@@ -102,7 +102,7 @@ def visualize_different_shapes(
     for i, label in enumerate(row_labels):
         axes[i, 0].annotate(
             label, xy=(-0.6, 0.5), xycoords="axes fraction",
-            fontsize=12, fontweight='bold', ha='right', va='center', rotation=90
+            fontsize=12, ha='right', va='center', rotation=90
         ) 
 
     # Plot Square
@@ -136,7 +136,7 @@ def visualize_different_shapes(
     for ax in axes[:, 0]:  
         ax.set_ylabel("y", fontsize=10, labelpad=2)
 
-    fig.suptitle("Eigenvectors for the 3 Smallest ω", fontsize=12, fontweight="bold")
+    fig.suptitle("Eigenvectors for the 3 Smallest ω", fontsize=12)
 
     # Colorbar
     cbar = fig.colorbar(im, ax=axes, location="bottom", shrink=1, aspect=30, pad=0.12)
