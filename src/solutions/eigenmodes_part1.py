@@ -116,50 +116,26 @@ def create_circle_dependency(N, initial_circle):
     # initial matrix has (N*N)*(N*N) size, to capture all the dependencies
     initial_matrix = np.zeros((N*N, N*N))
     for i, row in enumerate(initial_matrix):
-        row_index = int(i/N)
+        row_index = int(i/N) 
         col_index = i%N
 
         if initial_circle[row_index, col_index] == 0:
             # outside circle area
-            row[:] = -5
+            row[i] = 1
             continue
         if initial_circle[row_index, col_index] == -1:
+            # border cell
+            row[i] = 1
             continue
 
-        # booleans for skipping rows
-        skip_first_row = False
-        skip_first_col = False
-        skip_last_col = False
-        skip_last_row = False
-
-        # if no neighbor point of border point or border point the diagonal value is 4
         waarde = 4
-
-        # adress border points or neighbors of border points
-
-        
-        if initial_circle[row_index, col_index-1] == -1: 
-            waarde -=1
-            skip_first_col = True
-        if initial_circle[row_index, col_index+1] == -1:
-            waarde -=1
-            skip_last_col = True
-        if initial_circle[row_index-1, col_index] == -1:
-            waarde -=1
-            skip_first_row = True
-        if initial_circle[row_index+1, col_index] == -1:
-            waarde -=1
-            skip_last_row = True
 
         # assign values for the dependencies
         row[i] = -waarde
-        if not skip_last_col:
-            row[i +1] = 1
-        if not skip_first_col:
-            row[i -1] = 1
-        if not skip_last_row:
-            row[i + N] = 1 
-        if not skip_first_row:
-            row[i - N] = 1   
             
+        row[i +1] = 1
+        row[i -1] = 1
+        row[i + N] = 1 
+        row[i - N] = 1   
+
     return initial_matrix

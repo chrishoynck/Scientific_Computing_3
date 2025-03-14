@@ -1,8 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap, BoundaryNorm
+import matplotlib.cm as cm
+import matplotlib.colors as mcolors
 
-def visualize_mesh(matrix):
+def visualize_mesh(matrix, ranges):
     """
     Visualize a 2D integer matrix as a colored mesh.
 
@@ -58,4 +60,58 @@ def visualize_mesh(matrix):
     plt.ylabel("Row Index")
 
     # Show the plot
+    plt.show()
+
+def plot_diffusion_circle(gridjes, Ntjes):
+    """
+    Visualizes the evolution of a 2D Diffusion on a circle
+
+    Parameters:
+        gridjes (Tuple): (grid, object_grid), where:
+            - grid (numpy.ndarray): 2D array representing concentration values.
+            - object_grid (numpy.ndarray): 2D array indicating circle placement.
+        NNjtes (List(int)): list of different number of discretization steps used.
+    """
+
+    assert len(Ntjes) == 3, f"The number of different discretizations should be 3, now {len(Ntjes)}"
+
+    # plot setup
+    fig, axs = plt.subplots(1, 3, figsize=(4.8, 2.8), sharey=True)
+
+    # colormaps
+    object_cmap = mcolors.ListedColormap(["white", "none"])  # Only one color, yellow
+    norm = mcolors.Normalize(vmin=0, vmax=1)
+    cmap = cm.viridis  # Choose a colormap
+    sm = cm.ScalarMappable(cmap=cmap, norm=norm)  
+
+    deltax_string = r"$\Delta x: $"
+
+    for i in range(3):
+        gridd, object_gridd = gridjes[i]
+
+        # fill in according to concentration value
+        img = axs[i].imshow(
+            gridd, cmap=cmap, norm=norm, origin="lower", extent=[0, 2, 0, 2]
+        )
+
+        # mask cells lying outside circle
+        axs[i].imshow(
+            object_gridd, cmap=object_cmap, origin="lower", extent=[0, 2, 0, 2] 
+        )
+
+        fraction_string = rf"$\frac{{1}}{{{Ntjes[i] // 2}}}$"
+
+        axs[i].set_title(deltax_string +  fraction_string, fontsize=14)
+        axs[i].set_xlabel("x")
+    axs[0].set_ylabel("y")
+
+    # colorbar settings
+    cbar_ax = fig.add_axes([0.11, 0.07, 0.82, 0.03])
+    cbar = plt.colorbar(sm, cax=cbar_ax, orientation="horizontal")
+    cbar.set_label("Concentration", fontsize=11)
+
+    fig.suptitle("Circle Diffusion", fontsize=15)
+    plt.tight_layout()
+    plt.subplots_adjust(wspace=0.08, top=0.8, bottom=0.27)
+    plt.savefig("plots/DLA_snapshots_a.png", dpi=300, bbox_inches="tight")
     plt.show()
