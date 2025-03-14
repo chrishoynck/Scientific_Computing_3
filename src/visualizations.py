@@ -60,7 +60,6 @@ def visualize_mesh(matrix):
     # Show the plot
     plt.show()
 
-
 def visualize_different_shapes(
     eigenvectors_square,
     eigenvalues_square,
@@ -94,42 +93,53 @@ def visualize_different_shapes(
     global_vmin = min(arr.min() for arr in all_values)
     global_vmax = max(arr.max() for arr in all_values)
 
-    # Create figure and axes with extra space for the colorbar
-    fig, axes = plt.subplots(3, num_modes, figsize=(6, 5))
-    fig.subplots_adjust(right=0.85, wspace=0.3, hspace=0.4)
+    # Figure + colorbar
+    fig, axes = plt.subplots(3, num_modes, figsize=(5, 6))
+    fig.subplots_adjust(bottom=0.14, left=0.2, wspace=0.1, hspace=0.25)
 
-    # Add row labels
+    # Add row labels for shape names
     row_labels = ["Square", "Circle", "Rectangle"]
     for i, label in enumerate(row_labels):
-        axes[i, 0].set_ylabel(label, fontsize=12, fontweight='bold', labelpad=20)
+        axes[i, 0].annotate(
+            label, xy=(-0.6, 0.5), xycoords="axes fraction",
+            fontsize=12, fontweight='bold', ha='right', va='center', rotation=90
+        ) 
 
     # Plot Square
     for i in range(num_modes):
-        im = axes[0, i].imshow(reshaped_sq[i], cmap="viridis", vmin=global_vmin, vmax=global_vmax)
-        axes[0, i].set_title(f"Eigenvalue = {sorted_eigvals_sq[i]:.2f}", fontsize=10)
+        im = axes[0, i].imshow(reshaped_sq[i], cmap="viridis", vmin=global_vmin, vmax=global_vmax, origin="lower")
+        axes[0, i].set_title(f"ω = {sorted_eigvals_sq[i]:.4f}", fontsize=10)
 
     # Plot Circle
     for i in range(num_modes):
-        axes[1, i].imshow(reshaped_circ[i], cmap="viridis", vmin=global_vmin, vmax=global_vmax)
-        axes[1, i].set_title(f"Eigenvalue = {sorted_eigvals_circ[i]:.2f}", fontsize=10)
+        axes[1, i].imshow(reshaped_circ[i], cmap="viridis", vmin=global_vmin, vmax=global_vmax, origin="lower")
+        axes[1, i].set_title(f"ω = {sorted_eigvals_circ[i]:.4f}", fontsize=10)
 
     # Plot Rectangle
     for i in range(num_modes):
-        axes[2, i].imshow(reshaped_rect[i], cmap="viridis", vmin=global_vmin, vmax=global_vmax)
-        axes[2, i].set_title(f"Eigenvalue = {sorted_eigvals_rect[i]:.2f}", fontsize=10)
+        axes[2, i].imshow(reshaped_rect[i], cmap="viridis", vmin=global_vmin, vmax=global_vmax, origin="lower")
+        axes[2, i].set_title(f"ω = {sorted_eigvals_rect[i]:.4f}", fontsize=10)
 
+    # Tick label
     for row in range(3):
         for col in range(num_modes):
-            if col > 0:  # Remove y-axis labels from all but the first column
+            if col > 0:  # Remove y-axis ticks from all but the first column
                 axes[row, col].set_yticks([])
-            if row == 0:  # Remove x-axis labels from the first row
+            if row == 0:  # Remove x-axis ticks from the first row
                 axes[row, col].set_xticks([])
 
-    fig.suptitle("Eigenvectors for the 3 Smallest Eigenvalues")
+    # X-axis label
+    for ax in axes[-1, :]:  
+        ax.set_xlabel("x", fontsize=10, labelpad=1)
 
-    # Add colorbar
-    cbar_ax = fig.add_axes([0.88, 0.15, 0.02, 0.73])
-    fig.colorbar(im, cax=cbar_ax, orientation="vertical")
-    cbar_ax.set_ylabel("Magnitude", fontsize=10)
+    # Y-axis label
+    for ax in axes[:, 0]:  
+        ax.set_ylabel("y", fontsize=10, labelpad=2)
+
+    fig.suptitle("Eigenvectors for the 3 Smallest ω", fontsize=12, fontweight="bold")
+
+    # Colorbar
+    cbar = fig.colorbar(im, ax=axes, location="bottom", shrink=1, aspect=30, pad=0.12)
+    cbar.set_label("Magnitude", fontsize=10)
 
     plt.show()
