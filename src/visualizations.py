@@ -143,3 +143,33 @@ def visualize_different_shapes(
     cbar.set_label("Magnitude", fontsize=10)
 
     plt.show()
+def eigenfrequencies_plot(sizes, eigenfrequencies_square, eigenfrequencies_circle, eigenfrequencies_rectangle):
+    """
+    Plots eigenfrequencies for Square, Circle, and Rectangle shapes for given sizes (L).
+    
+    Parameters:
+        sizes (list): List of values for L (size parameter).
+        eigenfrequencies_square (dict): Dictionary mapping L to eigenfrequencies for squares.
+        eigenfrequencies_circle (dict): Dictionary mapping L to eigenfrequencies for circles.
+        eigenfrequencies_rectangle (dict): Dictionary mapping L to eigenfrequencies for rectangles.
+    """
+    # Colours
+    viridis = plt.cm.viridis
+    colors = [viridis(0.2), viridis(0.5), viridis(0.8)]
+
+    # Create figure with 3 subplots
+    fig, axes = plt.subplots(1, 3, figsize=(5, 2), sharey=True)
+    shapes = ["Square", "Circle", "Rectangle"]
+    data_dicts = [eigenfrequencies_square, eigenfrequencies_circle, eigenfrequencies_rectangle]
+
+    for ax, shape, color, data in zip(axes, shapes, colors, data_dicts):
+        for N in sizes:
+            if N in data:
+                ax.scatter([N] * len(data[N]), data[N], color=color, s=1)
+        ax.set_xlabel("L")
+        ax.set_title(f"{shape}", fontsize=12, color="black")
+        ax.grid(True)
+
+    axes[0].set_ylabel("λ")
+    plt.tight_layout()
+    plt.show()
