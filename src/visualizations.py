@@ -1,7 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import BoundaryNorm, ListedColormap
-
+import src.solutions.eigenmodes_part1 as eigen_part1
+import matplotlib.animation as animation
+import matplotlib.ticker as ticker
 
 def visualize_mesh(matrix):
     """
@@ -161,3 +163,39 @@ def eigenfrequencies_plot(sizes, eigenfrequencies_square, eigenfrequencies_circl
     axes[0].set_ylabel("λ")
     plt.tight_layout()
     plt.show()
+
+def plot_eigenmodes(N, num_modes, eigenvalues, eigenvectors, t_values, A, B, c):
+    """
+    Create an animation of eigenmodes over time.
+
+    Parameters:
+    - N (int): Matrix size.
+    - num_modes (int): Number of eigenmodes.
+    - eigenvalues (np.array): Computed eigenvalues.
+    - eigenvectors (np.array): Computed eigenvectors.
+    - t_values (np.array): Time steps for animation.
+    - A, B, c (float): Constants for oscillation.
+    """
+    viridis = plt.cm.viridis
+    colours = viridis(np.linspace(0, 1, num_modes))
+
+    fig, ax = plt.subplots(figsize=(4.5, 4))
+    lines = [ax.plot([], [], marker='o', linestyle='-', color=colours[i])[0] for i in range(num_modes)]
+    ax.set_xlim(0, N - 1)
+    ax.set_ylim(-0.00075, 0.00075)
+    #ax.yaxis.set_major_formatter(ticker.FormatStrFormatter('%.1e'))
+    ax.set_xlabel("Grid Point")
+    ax.set_ylabel("Amplitude")
+    ax.set_title("Eigenmode Oscillations")
+    fig.tight_layout()
+
+    ani = animation.FuncAnimation(
+        fig, eigen_part1.update, frames=len(t_values), init_func=lambda: eigen_part1.init(lines),
+        fargs=(t_values, lines, eigenvalues, eigenvectors, A, B, c, ax, N), blit=False
+    )
+
+    # Animation
+    #ani = animation.FuncAnimation(fig, eigen_part1.update, frames=len(t_values), init_func=eigen_part1.init(lines), blit=False)
+    animation_filename = "plots/eigenmode_animation.gif"
+    ani.save(animation_filename, writer="pillow", fps=20)
+
