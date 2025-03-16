@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import BoundaryNorm, ListedColormap
 
-
 def visualize_mesh(matrix):
     """
     Visualize a 2D integer matrix as a colored mesh.
@@ -142,7 +141,9 @@ def visualize_different_shapes(
     cbar = fig.colorbar(im, ax=axes, location="bottom", shrink=1, aspect=30, pad=0.12)
     cbar.set_label("Magnitude", fontsize=10)
 
-    plt.show()
+    plt.savefig("plots/eigenvectors.png", dpi=300, bbox_inches="tight")
+    plt.close(fig)
+
 def eigenfrequencies_plot(sizes, eigenfrequencies_square, eigenfrequencies_circle, eigenfrequencies_rectangle):
     """
     Plots eigenfrequencies for Square, Circle, and Rectangle shapes for given sizes (L).
@@ -158,7 +159,7 @@ def eigenfrequencies_plot(sizes, eigenfrequencies_square, eigenfrequencies_circl
     colors = [viridis(0.2), viridis(0.5), viridis(0.8)]
 
     # Create figure with 3 subplots
-    fig, axes = plt.subplots(1, 3, figsize=(5, 2), sharey=True)
+    fig, axes = plt.subplots(1, 3, figsize=(4, 1), sharey=True)
     shapes = ["Square", "Circle", "Rectangle"]
     data_dicts = [eigenfrequencies_square, eigenfrequencies_circle, eigenfrequencies_rectangle]
 
@@ -171,5 +172,7 @@ def eigenfrequencies_plot(sizes, eigenfrequencies_square, eigenfrequencies_circl
         ax.grid(True)
 
     axes[0].set_ylabel("λ")
-    plt.tight_layout()
-    plt.show()
+
+    plt.grid(True)
+    plt.savefig("plots/eigenfrequencies.png", dpi=300, bbox_inches="tight")
+    plt.close(fig)
