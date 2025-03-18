@@ -115,3 +115,25 @@ def plot_diffusion_circle(gridjes, Ntjes):
     plt.subplots_adjust(wspace=0.08, top=0.8, bottom=0.27)
     plt.savefig("plots/DLA_snapshots_a.png", dpi=300, bbox_inches="tight")
     plt.show()
+
+
+
+def vis_harmonic_oscillator(data_per_k):
+    """
+    Visualizes the harmonic oscillator, computed with the leapfrog method
+
+    Parameters:
+        gridjes (dict): k: (all_xs, all_vs), where:
+            - k: spring constant (used for Hooke's law)
+            - all_xs (list): List of computed spatial values
+            - all_vs (list): List of computed velocities, corresponding with spatial value
+    """
+    plt.figure(figsize=(3, 4))
+    for ktj,(all_xs, all_vs) in data_per_k.items():
+        plt.plot(all_xs, all_vs, label=f"k: {ktj}")
+
+    plt.xlabel("x")
+    plt.ylabel("v")
+    plt.title("Harmonic Oscillator")
+    plt.legend()
+    plt.show()
