@@ -76,7 +76,7 @@ def plot_diffusion_circle(gridjes, Ntjes):
     assert len(Ntjes) == 3, f"The number of different discretizations should be 3, now {len(Ntjes)}"
 
     # plot setup
-    fig, axs = plt.subplots(1, 3, figsize=(4.8, 2.8), sharey=True)
+    fig, axs = plt.subplots(1, 3, figsize=(4.9, 2.8), sharey=True)
 
     # colormaps
     object_cmap = mcolors.ListedColormap(["white", "none"])  # Only one color, yellow
@@ -91,39 +91,37 @@ def plot_diffusion_circle(gridjes, Ntjes):
 
         # fill in according to concentration value
         img = axs[i].imshow(
-            gridd, cmap=cmap, norm=norm, origin="lower", extent=[0, 2, 0, 2]
+            gridd, cmap=cmap, norm=norm, origin="lower", extent=[-2, 2, -2, 2]
         )
 
         # mask cells lying outside circle
         axs[i].imshow(
-            object_gridd, cmap=object_cmap, origin="lower", extent=[0, 2, 0, 2] 
+            object_gridd, cmap=object_cmap, origin="lower", extent=[-2, 2, -2, 2] 
         )
 
-        fraction_string = rf"$\frac{{1}}{{{Ntjes[i] // 2}}}$"
+        fraction_string = rf"$\frac{{1}}{{{Ntjes[i] // 4}}}$"
 
         axs[i].set_title(deltax_string +  fraction_string, fontsize=14)
         axs[i].set_xlabel("x")
     axs[0].set_ylabel("y")
 
     # colorbar settings
-    cbar_ax = fig.add_axes([0.11, 0.07, 0.82, 0.03])
+    cbar_ax = fig.add_axes([0.13, 0.07, 0.82, 0.03])
     cbar = plt.colorbar(sm, cax=cbar_ax, orientation="horizontal")
     cbar.set_label("Concentration", fontsize=11)
 
     fig.suptitle("Circle Diffusion", fontsize=15)
     plt.tight_layout()
-    plt.subplots_adjust(wspace=0.08, top=0.8, bottom=0.27)
-    plt.savefig("plots/DLA_snapshots_a.png", dpi=300, bbox_inches="tight")
+    plt.subplots_adjust(wspace=0.14, top=0.8, bottom=0.27)
+    plt.savefig("plots/Diffusion_circle_a.png", dpi=300, bbox_inches="tight")
     plt.show()
-
-
 
 def vis_harmonic_oscillator(data_per_k):
     """
     Visualizes the harmonic oscillator, computed with the leapfrog method
 
     Parameters:
-        gridjes (dict): k: (all_xs, all_vs), where:
+        data_per_k (dict): k: (all_xs, all_vs), where:
             - k: spring constant (used for Hooke's law)
             - all_xs (list): List of computed spatial values
             - all_vs (list): List of computed velocities, corresponding with spatial value
@@ -136,4 +134,35 @@ def vis_harmonic_oscillator(data_per_k):
     plt.ylabel("v")
     plt.title("Harmonic Oscillator")
     plt.legend()
+    plt.savefig("plots/harmonic_oscillator.png")
+    plt.show()
+
+
+def vis_phase_oscillator(data_per_freq, freqs):
+    """
+    Visualizes the harmonic oscillator with extra sinusoidal force, computed with the leapfrog method
+
+    Parameters:
+        data_per_freq (dict): freq: (all_xs, all_vs), where:
+            - freq: different frequencies used for extra sinusoidal force
+            - all_xs (list): List of Lists of computed spatial values, one list for every initial x value
+            - all_vs (list): List of Lists of computed velocity values, one list for every initial x value
+    """
+
+    frequencie_string = r"$\omega: $"
+    fig, axs = plt.subplots(2, 2, figsize=(4, 4), sharey=False, sharex=False)
+    axs = axs.flatten()
+    for i, freq in enumerate(freqs):
+        for (all_xs, all_vs) in data_per_freq[freq]:
+            axs[i].plot(all_xs, all_vs, color="b")
+        
+        if i%2 == 0:
+            axs[i].set_ylabel("v")
+        if i>1:
+            axs[i].set_xlabel("x")
+        axs[i].set_title(frequencie_string + f"{freq}")
+        # axs[i].set_legend()
+    fig.suptitle("Phase Plot Oscillator with extra Force")
+    plt.tight_layout()
+    plt.savefig("plots/harmonic_oscillator.png")
     plt.show()

@@ -1,6 +1,7 @@
 import numpy as np
-from scipy.linalg import solve
+from scipy.sparse.linalg import spsolve
 import src.solutions.eigenmodes_part1 as wave_sol
+from scipy.sparse import csr_matrix
 
 def direct_diffusion(nntjes, source_location, grid_size):
     """
@@ -30,7 +31,11 @@ def direct_diffusion(nntjes, source_location, grid_size):
         assert grid_size > 0, "grid size should be at least one cell"
 
         # determine flattened index with initial coordinates
-        which_to_initial = int((N)*N*ytje/grid_size + xje/grid_size*(N)) -N -1 
+        # which_to_initial = int((N)*N*ytje/(0.5*grid_size) + xje/(0.5*grid_size)*(N)) -N -1
+        which_to_initial = int(((ytje + 0.5*grid_size)/(grid_size))*N*N + (xje + 0.5*grid_size)/grid_size *N) -N-1
+        print(f"y: {which_to_initial//N}") 
+        print(f"x: {which_to_initial%N}") 
+
 
         # intialize b with zeros, and set source index to 1
         b = np.zeros(N*N)
@@ -40,8 +45,10 @@ def direct_diffusion(nntjes, source_location, grid_size):
         dependency_circle[which_to_initial, :] = 0
         dependency_circle[which_to_initial, which_to_initial] = 1
 
+        dependency_circle_sparse = csr_matrix(dependency_circle)
+
         # solve system, result is the diffusion grid
-        x = solve(dependency_circle, b)
+        x = spsolve(dependency_circle_sparse, b)
         c_grid = x.reshape((N, N))
 
         # mask grid cells outtside circle range
@@ -51,3 +58,5 @@ def direct_diffusion(nntjes, source_location, grid_size):
         converged_grids.append((c_grid, outside_grid))
 
     return converged_grids
+
+
