@@ -283,16 +283,18 @@ def vis_harmonic_oscillator(data_per_k):
             - all_vs (list): List of computed velocities, corresponding with spatial value
     """
     plt.figure(figsize=(3, 4))
-    for ktj,(all_xs, all_vs) in data_per_k.items():
-        plt.plot(all_xs, all_vs, label=f"k: {ktj}")
+
+    ks = list(data_per_k.keys())
+    colours = cm.viridis(np.linspace(0, 1, len(ks)))
+    for (ktj,(all_xs, all_vs)), colour in zip(data_per_k.items(), colours):
+        plt.plot(all_xs, all_vs, label=f"k: {ktj}", color=colour)
 
     plt.xlabel("x")
     plt.ylabel("v")
     plt.title("Harmonic Oscillator")
-    plt.legend()
-    plt.savefig("plots/harmonic_oscillator.png")
+    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    plt.savefig("plots/harmonic_oscillator.png", dpi=300, bbox_inches="tight")
     plt.show()
-
 
 def vis_phase_oscillator(data_per_freq, freqs):
     """
@@ -308,9 +310,12 @@ def vis_phase_oscillator(data_per_freq, freqs):
     frequencie_string = r"$\omega: $"
     fig, axs = plt.subplots(2, 2, figsize=(4, 4), sharey=False, sharex=False)
     axs = axs.flatten()
-    for i, freq in enumerate(freqs):
+
+    colours = cm.viridis(np.linspace(0, 1, len(freqs)))
+
+    for i, (freq, colour) in enumerate(zip(freqs, colours)):
         for (all_xs, all_vs) in data_per_freq[freq]:
-            axs[i].plot(all_xs, all_vs, color="b")
+            axs[i].plot(all_xs, all_vs, color=colour)
         
         if i%2 == 0:
             axs[i].set_ylabel("v")
@@ -318,7 +323,7 @@ def vis_phase_oscillator(data_per_freq, freqs):
             axs[i].set_xlabel("x")
         axs[i].set_title(frequencie_string + f"{freq}")
         # axs[i].set_legend()
-    fig.suptitle("Phase Plot Oscillator with extra Force")
+    fig.suptitle("Phase Plot Oscillator with Extra Force")
     plt.tight_layout()
-    plt.savefig("plots/harmonic_oscillator_phase.png")
+    plt.savefig("plots/harmonic_oscillator_phase.png", dpi=300, bbox_inches="tight")
     plt.show()
