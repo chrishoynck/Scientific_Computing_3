@@ -282,7 +282,7 @@ def vis_harmonic_oscillator(data_per_k):
             - all_xs (list): List of computed spatial values
             - all_vs (list): List of computed velocities, corresponding with spatial value
     """
-    plt.figure(figsize=(3, 4))
+    plt.figure(figsize=(3.5, 4))
 
     ks = list(data_per_k.keys())
     colours = cm.viridis(np.linspace(0, 1, len(ks)))
@@ -292,7 +292,7 @@ def vis_harmonic_oscillator(data_per_k):
     plt.xlabel("x")
     plt.ylabel("v")
     plt.title("Harmonic Oscillator")
-    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5)) # legend placed outside of plot
     plt.savefig("plots/harmonic_oscillator.png", dpi=300, bbox_inches="tight")
     plt.show()
 
