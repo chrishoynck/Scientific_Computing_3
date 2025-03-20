@@ -37,6 +37,7 @@ def harmonic_oscillator_leapfrog(ks, deltat, x_0, v_0, m):
         # this is the case because m=1 
         a = -k*x
         v_half = v_0 + deltat/2 *a
+        v_half = 0.5*(v_0 + (v_0 + deltat*a))
 
         # calculate the number of steps until one period is completed
         rangeje = int(((2*np.pi)//np.sqrt(k) +1)/deltat)
@@ -67,20 +68,19 @@ def extra_force(freq, deltat, iter, f_0=1):
 def v_plus_onehalf_force(freq, deltat, iter, a, m, v):
     return (extra_force(freq, deltat, iter) +  a)* (deltat/m) + v
 
-def harmonic_oscillator_extra_force(k, deltat, xs, v_0, m, freq=2):
+def harmonic_oscillator_extra_force(k, deltat, xs, v_0, m, freq=2, time=10):
     """
-    Simulates the motion of a harmonic oscillator using the leapfrog integration method.
+    Simulates the motion of a harmonic oscillator including an extra force using the leapfrog integration method.
 
     Parameters:
-    ks (list of float): List of spring constants for different simulations.
+    k (float): spring constant. 
     deltat (float): Time step size.
-    x_0 (float): Initial position of the oscillator.
+    xs (List): Initial positions of the oscillator.
     v_0 (float): Initial velocity of the oscillator.
     m (float): Mass of the oscillator (assumed to be 1 in this implementation).
 
     Returns:
-    dict: A dictionary where each key is a spring constant k, and the value is a tuple 
-          containing lists of positions and velocities over time.
+    List: a List for each x_0 containing lists of positions and velocities over time.
     """
     data_per_x0 = []
 
@@ -97,9 +97,8 @@ def harmonic_oscillator_extra_force(k, deltat, xs, v_0, m, freq=2):
         a = -k*x
         v_half = v_0 + deltat/2 *a
 
-        # calculate the number of steps until one period is completed
-        rangeje = int(((2*np.pi)//np.sqrt(k) +1)/deltat)
-        rangeje = int(10//deltat)
+        # calculate the number of steps until time is reached
+        rangeje = int(time//deltat)
         for i, t in enumerate(range(rangeje)):
             
             x_new = x_plus_1(x, deltat, v_half)

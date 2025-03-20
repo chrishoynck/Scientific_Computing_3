@@ -164,5 +164,5 @@ def vis_phase_oscillator(data_per_freq, freqs):
         # axs[i].set_legend()
     fig.suptitle("Phase Plot Oscillator with extra Force")
     plt.tight_layout()
-    plt.savefig("plots/harmonic_oscillator.png")
+    plt.savefig("plots/harmonic_oscillator_phase.png")
     plt.show()
