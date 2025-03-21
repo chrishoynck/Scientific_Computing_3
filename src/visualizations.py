@@ -282,7 +282,7 @@ def vis_harmonic_oscillator(data_per_k):
             - all_xs (list): List of computed spatial values
             - all_vs (list): List of computed velocities, corresponding with spatial value
     """
-    plt.figure(figsize=(3.5, 4))
+    plt.figure(figsize=(4, 4))
 
     ks = list(data_per_k.keys())
     colours = cm.viridis(np.linspace(0, 1, len(ks)))
@@ -291,7 +291,7 @@ def vis_harmonic_oscillator(data_per_k):
 
     plt.xlabel("x")
     plt.ylabel("v")
-    plt.title("Harmonic Oscillator")
+    plt.title("Spring Harmonic Oscillator")
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5)) # legend placed outside of plot
     plt.savefig("plots/harmonic_oscillator.png", dpi=300, bbox_inches="tight")
     plt.show()
@@ -311,9 +311,9 @@ def vis_phase_oscillator(data_per_freq, freqs):
     fig, axs = plt.subplots(2, 2, figsize=(4, 4), sharey=False, sharex=False)
     axs = axs.flatten()
 
-    colours = cm.viridis(np.linspace(0, 1, len(freqs)))
+    colour = cm.viridis(0.5)
 
-    for i, (freq, colour) in enumerate(zip(freqs, colours)):
+    for i, freq in enumerate(freqs):
         for (all_xs, all_vs) in data_per_freq[freq]:
             axs[i].plot(all_xs, all_vs, color=colour)
         
