@@ -216,7 +216,7 @@ def plot_eigenmodes(N, num_modes, eigenvalues, eigenvectors, t_values, A, B, c):
     # Animation
     #ani = animation.FuncAnimation(fig, eigen_part1.update, frames=len(t_values), init_func=eigen_part1.init(lines), blit=False)
     animation_filename = "plots/eigenmode_animation.gif"
-    ani.save(animation_filename, writer="pillow", fps=20)
+    ani.save(animation_filename, writer="pillow", fps=10)
 
 def plot_diffusion_circle(gridjes, Ntjes):
     """
