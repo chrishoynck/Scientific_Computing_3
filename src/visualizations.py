@@ -159,7 +159,7 @@ def eigenfrequencies_plot(sizes, eigenfrequencies_square, eigenfrequencies_circl
     """
     # Colours
     viridis = plt.cm.viridis
-    colors = [viridis(0.2), viridis(0.5), viridis(0.8)]
+    colors = [viridis(0.1), viridis(0.5), viridis(0.9)]
 
     # Create figure with 3 subplots
     fig, axes = plt.subplots(1, 3, figsize=(4, 1), sharey=True)
@@ -172,11 +172,11 @@ def eigenfrequencies_plot(sizes, eigenfrequencies_square, eigenfrequencies_circl
                 ax.scatter([N] * len(data[N]), data[N], color=color, s=1)
         ax.set_xlabel("L")
         ax.set_title(f"{shape}", fontsize=12, color="black")
-        ax.grid(True)
+        ax.set_xticks([1, 2, 3, 4, 5])
 
     axes[0].set_ylabel("λ")
 
-    plt.grid(True)
+    plt.ylim(2.8, 3.2)
     plt.savefig("plots/eigenfrequencies.png", dpi=300, bbox_inches="tight")
     plt.close(fig)
 

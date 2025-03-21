@@ -1,7 +1,6 @@
 import numpy as np
 
-
-def create_init_matrix_a(N, rectangular=False):
+def create_init_matrix_a(L, N, rectangular=False):
     """
     Create an initial dependency matrix for an N x N grid.
 
@@ -16,11 +15,13 @@ def create_init_matrix_a(N, rectangular=False):
         matrix. Each row corresponds to a grid point, with the diagonal containing the
         adjusted dependency value and the neighboring positions (if applicable) set to 1.
     """
+    h = L / N - 1
+    M = N * N
     # initial matrix has (N*N)*(N*N) size, to capture all the dependencies
     if rectangular:
-        initial_matrix = np.zeros((2 * N * N, 2 * N * N))
+        initial_matrix = np.zeros((2 * M, 2 * M))
     else:
-        initial_matrix = np.zeros((N * N, N * N))
+        initial_matrix = np.zeros((M, M))
 
     for i, row in enumerate(initial_matrix):
         # booleans for skipping rows
@@ -45,12 +46,12 @@ def create_init_matrix_a(N, rectangular=False):
             ):
                 row[i] = 1
                 continue
-            row[i] = -waarde
+            row[i] = -waarde / (h**2)
 
-            row[i + 1] = 1
-            row[i - 1] = 1
-            row[i + 2 * N] = 1
-            row[i - 2 * N] = 1
+            row[i + 1] = 1 / (h**2)
+            row[i - 1] = 1 / (h**2)
+            row[i + 2 * N] = 1 / (h**2)
+            row[i - 2 * N] = 1 / (h**2)
         else:
             if (
                 row_index == 0
@@ -61,12 +62,12 @@ def create_init_matrix_a(N, rectangular=False):
                 row[i] = 1
                 continue
 
-            row[i] = -waarde
+            row[i] = -waarde / (h**2)
 
-            row[i + 1] = 1
-            row[i - 1] = 1
-            row[i + N] = 1
-            row[i - N] = 1
+            row[i + 1] = 1 / (h**2)
+            row[i - 1] = 1 / (h**2)
+            row[i + N] = 1 / (h**2)
+            row[i - N] = 1 / (h**2)
 
     return initial_matrix
 
@@ -105,8 +106,7 @@ def create_circle(N):
                 initial_circle[i, j] = -1
     return initial_circle
 
-
-def create_circle_dependency(N, initial_circle):
+def create_circle_dependency(L, N, initial_circle):
     """
     Create an initial dependency matrix for an N x N grid.
 
@@ -123,6 +123,7 @@ def create_circle_dependency(N, initial_circle):
     """
     # initial matrix has (N*N)*(N*N) size, to capture all the dependencies
     initial_matrix = np.zeros((N * N, N * N))
+    h = L / N - 1
 
     for i, row in enumerate(initial_matrix):
         row_index = int(i / N)
@@ -139,67 +140,10 @@ def create_circle_dependency(N, initial_circle):
         # if no neighbor point of border point or border point the diagonal value is 4
         waarde = 4
         # assign values for the dependencies
-        row[i] = -waarde
+        row[i] = -waarde / h**2
 
-        row[i + 1] = 1
-        row[i - 1] = 1
-        row[i + N] = 1
-        row[i - N] = 1
+        row[i + 1] = 1 / h**2
+        row[i - 1] = 1 / h**2
+        row[i + N] = 1 / h**2
+        row[i - N] = 1 / h**2
     return initial_matrix
-
-def T(t, A, B, c, λ):
-    """
-    Computes the time-dependent oscillation function based on sinusoidal motion.
-
-    Parameters:
-    - t (float): The current time step.
-    - A (float): Amplitude coefficient for the cosine term.
-    - B (float): Amplitude coefficient for the sine term.
-    - c (float): Scaling constant for oscillations.
-    - λ (float): Eigenvalue corresponding to the eigenmode.
-
-    Returns:
-    - float: The computed oscillation value at time t.
-    """
-    return A * np.cos(c * λ * t) + B * np.sin(c * λ * t)
-
-def init(lines):
-    """
-    Initializes the animation.
-
-    Parameters:
-    - lines (list): List of the eigenmodes.
-
-    Returns:
-    - list: The updated list of Line2D objects with cleared data.
-    """
-    for line in lines:
-        line.set_data([], [])
-    return lines
-
-def update(frame, t_values, lines, selected_eigenvalues, selected_eigenvectors, A, B, c, ax, N):
-    """
-    Update function for animation.
-
-    Parameters:
-    - frame (int): Current frame number.
-    - t_values (np.array): Array of time steps.
-    - lines (list): List of matplotlib line objects.
-    - selected_eigenvalues (np.array): Eigenvalues of the system.
-    - selected_eigenvectors (np.array): Eigenvectors of the system.
-    - A, B, c (float): Constants for oscillation.
-    - ax (matplotlib.axes.Axes): Axes object for updating title.
-    - N (int): Size of the matrix.
-    
-    Returns:
-    - Updated line objects.
-    """
-    t = t_values[frame]
-    for mode_idx, line in enumerate(lines):
-        λ = selected_eigenvalues[mode_idx]
-        eigenmode = selected_eigenvectors[:, mode_idx]
-        mode_shape = T(t, A, B, c, λ) * eigenmode
-        line.set_data(np.arange(N), mode_shape)
-    ax.set_title(f"Eigenmode Oscillations at t={t:.2f}")
-    return lines
-
