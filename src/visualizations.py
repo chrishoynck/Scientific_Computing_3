@@ -282,7 +282,7 @@ def vis_harmonic_oscillator(data_per_k):
             - all_xs (list): List of computed spatial values
             - all_vs (list): List of computed velocities, corresponding with spatial value
     """
-    plt.figure(figsize=(4, 4))
+    plt.figure(figsize=(3.5, 3))
 
     ks = list(data_per_k.keys())
     colours = cm.viridis(np.linspace(0, 1, len(ks)))
